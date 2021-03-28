@@ -12,6 +12,5 @@ def test_action(request):
      with open('./scripts/parse.sh', 'rb') as file:
           script = file.read()
      rc = subprocess.call(script, shell=True)
-     print('success')
      return redirect('test')
      

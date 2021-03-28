@@ -8,5 +8,6 @@ python3 manage.py runserver
 
 
 python manage.py parse
+python3 manage.py delete
 
 echo "hello">"hello.txt"

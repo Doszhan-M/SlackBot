@@ -4,8 +4,10 @@ from django.db import models
 class Posts(models.Model):
     headline = models.CharField(max_length=255, null=False,
                                 verbose_name='Заголовок')
-    public_time = models.DateTimeField(verbose_name='Дата публикации')
+    public_time = models.DateTimeField(auto_now_add=True, verbose_name='Дата захвата')
     link = models.URLField(max_length=1000, verbose_name='Ссылка поста')
+    status = models.CharField(max_length=255, default='waiting', null=False,
+                                verbose_name='Статус')
 
     class Meta:
         verbose_name = 'Пост'

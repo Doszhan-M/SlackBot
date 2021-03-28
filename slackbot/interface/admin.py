@@ -3,10 +3,10 @@ from .models import Posts, SlackBots
 
 
 class PostsAdmin(admin.ModelAdmin):
-    list_display = ('headline', 'public_time', 'link',)
-    list_display_links = ('headline', 'public_time', 'link',)
-    list_filter = ('headline', 'public_time',)
-    search_fields = ('headline', 'public_time',)
+    list_display = ('headline', 'public_time', 'link', 'status',)
+    list_display_links = ('headline', 'public_time', 'link', )
+    list_filter = ('headline', 'public_time', 'status',)
+    search_fields = ('headline', 'public_time', 'status',)
 
 class BotAdmin(admin.ModelAdmin):
     list_display = ('token', 'url', 'agent', 'host',)
