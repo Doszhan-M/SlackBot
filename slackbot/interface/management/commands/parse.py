@@ -2,9 +2,11 @@ from django.core.management.base import BaseCommand
 import requests
 from bs4 import BeautifulSoup
 from interface.models import Posts, SlackBots
+from interface.management.commands.random_agent import get_agent
 from django.utils import timezone
 from slack import WebClient
 import time
+import random
 
 
 class Command(BaseCommand):
@@ -15,12 +17,12 @@ class Command(BaseCommand):
         # url страницы для парсинга
         URL = 'https://m.habr.com/ru/company/skillfactory/blog/'
         # выдаваемый агент для сайта
-        HEADERS = {'User-Agent' : 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Mobile Safari/537.36',
+        HEADERS = {'User-Agent' : get_agent(),
         'Accept' : '*/*'}
         # хост нужно передать без слэша в конце
         HOST = 'https://habr.com'
         # Create a slack client
-        SLACKBOT = WebClient(token='xoxb-1905444677763-1912131503796-EoUjInoPDje7c4fc5thIp1Bm')
+        SLACKBOT = WebClient(token='xoxb-1900575918485-1903110096709-oQuJPQ5j0uJtwg3QV6AwPwjX')
 
 
         def get_html(url, params=None):
@@ -53,19 +55,23 @@ class Command(BaseCommand):
 
         def send_message():
             """отправить сообщение на канал"""
-            delay = 3
-            channel = '#test'
-            editor_text = f"Всем привет! На нашем хабре появились новые статьи.\n Не забудьте посмотреть:\n\n"
-            SLACKBOT.chat_postMessage(channel = channel, text = editor_text)
-            time.sleep(delay)
-            posts = Posts.objects.filter(status='waiting')
-            for post in posts:
-                link = post.link
-                SLACKBOT.chat_postMessage(channel = channel, text = link)
-                post.status = 'sended'
-                post.save()
-                print('Сообщение отправлено')
-                time.sleep (delay)
+            # найти все боты для задачи №1
+            bots = SlackBots.objects.filter(task='work1')
+            for bot in bots:
+                delay = bot.delay
+                channel = bot.channel
+                editor_text = bot.editor_text
+                slackbot = WebClient(token=bot.token)
+                slackbot.chat_postMessage(channel = channel, text = editor_text)
+                time.sleep(delay)
+                posts = Posts.objects.filter(status='waiting')
+                for post in posts:
+                    link = post.link
+                    SLACKBOT.chat_postMessage(channel = channel, text = link)
+                    post.status = 'sended'
+                    post.save()
+                    print('Сообщение отправлено')
+                    time.sleep (delay)
 
 
         def parse():
@@ -80,7 +86,8 @@ class Command(BaseCommand):
                     # Отправить сообщение каналу
                     send_message()
                 else:
-                    print('пусто')
+                    send_message()                    
+                    print('новых постов нет')
             else:
                 print('Error')
             return

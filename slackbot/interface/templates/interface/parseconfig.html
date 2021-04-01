@@ -1,0 +1,45 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+
+
+{% block content1 %}
+<!-- Masthead-->
+<header class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+
+        <!-- Masthead Heading-->
+        <h1 class="masthead-heading text-uppercase mb-0">Конфигурация Задачи №1</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+    </div>
+</header>
+<section class="page-section portfolio" id="portfolio">
+    <div class="container-md">
+        <div class="col-lg-8 col-xl-4 mx-auto">
+            <form style="text-align: center;" method="POST">
+                {% csrf_token %}
+                <div>
+                    <p><strong>Введите таймаут парсера:</strong>
+                    {{ form.parse_delay }}<br>
+                    <p><strong>Режим работы:</strong>
+                    {{ form.mode }}<br>
+                    <p><strong>Во сколько минут отправить сообщение:</strong>
+                    {{ form.minute }}<br>
+                    <p><strong>В который час отправить сообщение:</strong>
+                    {{ form.hour }}<br>
+                    <p><strong>В какой день недели отправить сообщение:</strong>
+                    {{ form.day }}<br>
+                </div>
+                <input class="btn btn-primary float-center" type="submit" value="ЗАПУСТИТЬ">
+                <a class="btn btn-danger mx-auto" href="{% url 'stop_bot' %}">ОСТАНОВИТЬ</a><br>     <br> 
+                <a class="btn btn-warning" href="{% url 'stop_all_bots' %}">ОСТАНОВИТЬ ВСЕ АКТИВНЫЕ ЗАДАЧИ</a>
+            </form>
+            
+        </div>
+</section>
+
+{% endblock content1 %}

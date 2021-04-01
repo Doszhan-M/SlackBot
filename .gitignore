@@ -1,5 +1,6 @@
 # My temp files
 /venv/
+./slackbot/venv/
 **/.idea/
 **/__pycache__/
 **/.vscode/
