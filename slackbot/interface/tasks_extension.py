@@ -8,17 +8,15 @@ from datetime import datetime
 
 
 # url страницы для парсинга
-URL = 'https://m.habr.com/ru/company/skillfactory/blog/'
+URL = 'https://habr.com/ru/company/skillfactory/blog/'
 # выдаваемый агент для сайта
 HEADERS = {'User-Agent' : get_agent(),
 'Accept' : '*/*'}
-# хост нужно передать без слэша в конце
-HOST = 'https://habr.com'
 # Таймаут парсера
 try:
-    delay = TaskConfig.objects.filter(name='task1').order_by('-id')[0].parse_delay 
+    delay = TaskConfig.objects.filter(task='task1').order_by('-id')[0].parse_delay * 60
 except IndexError:
-    delay = 10
+    delay = 300
 
 
 # декоратор задержки
@@ -48,18 +46,20 @@ def get_content(html):
     # работа библиотеки BeautifulSoup
     soup = BeautifulSoup(html, 'html.parser')
     # получаем все статьи вместе с временем публикации
-    items = soup.find_all('div', class_ = 'tm-article-snippet')
+    items = soup.find_all('article', class_ = 'post post_preview')
     for item in items:  
         # Получить время поста
-        public_time = item.find('span', class_ = 'tm-article-snippet__datetime-published').get_text(strip=True)
+        public_time = item.find('span', class_ = 'post__time').get_text(strip=True)
         # Получить заголовок поста
-        headline=item.find('h2', class_ = 'tm-article-snippet__title tm-article-snippet__title_h2').get_text(strip=True)
+        headline=item.find('h2', class_ = 'post__title').get_text(strip=True)
         if public_time.find('31 марта') == 0 and not Posts.objects.filter(headline=headline):
             Posts.objects.create(
             headline=headline,
-            link=HOST + item.find('a', class_ = 'tm-article-snippet__title-link').get('href'),)
+            link=item.find('a', class_ = 'post__title_link').get('href'),
+            tags=item.find('ul', class_ = 'post__hubs inline-list').get_text(strip=True))
             print('Появилась новая запись')
-    return 
+        else:
+            print('Новых постов нет') 
 
 
 def send_message():
@@ -86,26 +86,82 @@ def send_message():
                 print('Сообщение отправлено')
                 time.sleep (delay)
     else:
-        print('новых постов нет')
+        print('Ожидание новых постов')
 
-a = 4
-def work_mode():
+
+def work_mode(mode):
     """режим работы отправки сообщения"""
-    mode = TaskConfig.objects.filter(name='task1').order_by('-id')[0].mode
-    minute = TaskConfig.objects.filter(name='task1').order_by('-id')[0].minute
-    hour = TaskConfig.objects.filter(name='task1').order_by('-id')[0].hour
-    day = TaskConfig.objects.filter(name='task1').order_by('-id')[0].day
     if mode == 'mode1':
         send_message()
     elif mode == 'mode2':
+        minute = TaskConfig.objects.filter(name='task1').order_by('-id')[0].minute
         if datetime.now().minute == minute:
             send_message()
     elif mode == 'mode3':
+        hour = TaskConfig.objects.filter(name='task1').order_by('-id')[0].hour
         if datetime.now().hour == hour:
             send_message()
     elif mode == 'mode4':
+        day = TaskConfig.objects.filter(name='task1').order_by('-id')[0].day
         if datetime.now().isoweekday() == day:
             send_message()
+
+
+def work_mode2(mode):
+    """режим работы отправки сообщения"""
+    if mode == 'mode1':
+        send_message2()
+    elif mode == 'mode2':
+        minute = TaskConfig.objects.filter(name='task1').order_by('-id')[0].minute
+        if datetime.now().minute == minute:
+            send_message2()
+    elif mode == 'mode3':
+        hour = TaskConfig.objects.filter(name='task1').order_by('-id')[0].hour
+        if datetime.now().hour == hour:
+            send_message2()
+    elif mode == 'mode4':
+        day = TaskConfig.objects.filter(name='task1').order_by('-id')[0].day
+        if datetime.now().isoweekday() == day:
+            send_message2()
+
+
+
+def send_message2():
+    """отправить сообщение на канал"""
+    # найти все собранные посты за период задачи №2
+    posts = Posts.objects.filter(status='waiting')
+    text = set()
+    if posts:
+        # найти все боты для задачи №2
+        bots = SlackBots.objects.filter(task='work2')
+        for bot in bots:
+            delay = bot.delay
+            channel = bot.channel
+            editor_text = bot.editor_text
+            slackbot = WebClient(token=bot.token)
+            # Из постов и ботов достаем теги, и сравниваем их
+            for post in posts:
+                tags = post.tags.lower().split(',')
+                bot_tags = bot.bot_tags.lower().replace(', ', ',').split(',')
+                for i in tags:
+                    if i in bot_tags:
+                        # Если есть совпадение, то добавляем ее в переменную
+                        link = post.link
+                        text.add(link)
+                # изменить статус поста на отправлено
+                post.status = 'sended'
+                post.save()
+    if text:
+        # текс редактора
+        slackbot.chat_postMessage(channel = channel, text = editor_text)
+        time.sleep (delay)
+        for i in text:
+            # отправить все посты с задержкой
+            slackbot.chat_postMessage(channel = channel, text = i)
+            print('Сообщение отправлено')
+            time.sleep (delay)
+    else:
+        print('Ожидание новых постов')
 
 
 def get_agent():

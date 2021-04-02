@@ -9,6 +9,7 @@ class Posts(models.Model):
     link = models.URLField(max_length=1000, verbose_name='Ссылка поста')
     status = models.CharField(max_length=255, default='waiting', null=False,
                               verbose_name='Статус')
+    tags = models.TextField(verbose_name='Теги')
 
     class Meta:
         verbose_name = 'Пост'
@@ -26,11 +27,11 @@ class SlackBots(models.Model):
     work2 = 'work2'
     WORK = [(work1, 'Задача №1'), (work2, 'Задача №2')]
     task = models.CharField(max_length=5, choices=WORK,
-                            default=work1, verbose_name='задача')
-    delay = models.IntegerField(default=3, verbose_name='задержка для бота',
-                                help_text='задержка между отправками сообщении',)
+                            default=work1, verbose_name='Задача')
+    delay = models.IntegerField(default=3, verbose_name='Номер задачи',)
     editor_text = models.TextField(
         default=f"Всем привет! На нашем хабре появились новые статьи.\n Не забудьте посмотреть:\n\n")
+    bot_tags = models.TextField(help_text='Для задачи №2 введите теги через запятую',)
 
     class Meta:
         verbose_name = 'SlackBot'
@@ -38,8 +39,11 @@ class SlackBots(models.Model):
 
 
 class TaskConfig(models.Model):
-    name = models.CharField(default='task1', max_length=255,
-                            null=False, help_text='для захвата модели',)
+    task1 = 'task1'
+    task2 = 'task2'
+    WORK = [(task1, 'Задача №1'), (task2, 'Задача №2')]
+    task = models.CharField(max_length=5, choices=WORK,
+                            default=task1, verbose_name='Задача')
     task_id = models.CharField(
         max_length=255, null=False, help_text='для захвата модели',)
     parse_delay = models.IntegerField(default=5, verbose_name='задержка для парсинга',

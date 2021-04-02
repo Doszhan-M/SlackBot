@@ -33,11 +33,11 @@ class SlackBotForm(ModelForm):
             }),
             'task': Select(attrs={
                 'class': 'form-control',
-                'placeholder': 'задержка для бота'
+                'placeholder': 'Номер задачи'
             }),
             'delay': NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'задержка для бота'
+                'placeholder': 'Задержка для бота'
             }),
             'editor_text': Textarea(attrs={
                 'class': 'form-control',

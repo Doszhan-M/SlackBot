@@ -14,5 +14,4 @@ echo "hello">"hello.txt"
 
 celery -A slackbot worker -l INFO
 
-xoxb-1900575918485-1903110096709-oQuJPQ5j0uJtwg3QV6AwPwjX
 wsl --shutdown

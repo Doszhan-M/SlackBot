@@ -18,6 +18,10 @@
         <!-- Masthead Subheading-->
         <p class="masthead-subheading font-weight-light mb-0">Парсинг блога- Оповешание о новых постах - Уведомление
             студентов</p>
+
+            <hr>
+            <a class="btn btn-danger float-center" href="{% url 'start_bot2' %}">НАСТРОИТЬ И ЗАПУСТИТЬ</a>
+            <hr>
     </div>
 </header>
 <!-- Portfolio Section-->
@@ -78,6 +82,7 @@
             </div>
         </div>
 </section>
+
 <!-- About Section-->
 <section class="page-section bg-primary text-white mb-0" id="about">
     <div class="container">
@@ -92,9 +97,11 @@
         <!-- About Section Content-->
         <div class="row">
             <div class="col-lg-4 ml-auto">
+
                 <p class="lead">Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes
                     the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets
                     for easy customization.</p>
+                
             </div>
             <div class="col-lg-4 mr-auto">
                 <p class="lead">You can create your own custom avatar for the masthead, change the icon in the dividers,
@@ -110,6 +117,7 @@
         </div>
     </div>
 </section>
+
 {% endblock content1 %}
 
 {% block content2 %}
@@ -139,12 +147,18 @@
                             <div>
                                 <form style="text-align: center;" method="POST">
                                     {% csrf_token %}
-                                    {{ form.name }}<br>
-                                    {{ form.token }}<br>
-                                    {{ form.channel }}<br>
-                                    {{ form.task }}<br>
-                                    {{ form.delay }}<br>
-                                    {{ form.editor_text }}<br>
+                                    <p style="text-align: left;"><strong>Название бота:</strong>
+                                    {{ form.name }}
+                                    <p style="text-align: left;"><strong>Токен слак бота:</strong>
+                                    {{ form.token }}
+                                    <p style="text-align: left;"><strong>Канал бота:</strong>
+                                    {{ form.channel }}
+                                    <p style="text-align: left;"><strong>Номер задачи:</strong>
+                                    {{ form.task }}
+                                    <p style="text-align: left;"><strong>Задержка бота между отправками сообщении в секундах:</strong>
+                                    {{ form.delay }}
+                                    <p style="text-align: left;"><strong>Введите вступительный текст сообщения...:</strong>
+                                    {{ form.editor_text }}<hr>
                                     <input class="btn btn-primary float-center" type="submit" value="СОХРАНИТЬ">
                                 </form>
                             </div>
@@ -171,8 +185,7 @@
                             <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0"
                                 id="portfolioModal2Label">Конфигурировать Задачу №1</h2>
                             <hr>
-                            <a class="btn btn-primary float-center" href="{% url 'parseconfig' %}">Перейти к
-                                настройкам</a>
+                            <a class="btn btn-primary float-center" href="{% url 'parseconfig' %}">НАСТРОИТЬ И ЗАПУСТИТЬ</a>
                             <hr>
 
                         </div>

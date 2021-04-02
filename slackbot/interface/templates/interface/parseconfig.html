@@ -23,7 +23,7 @@
             <form style="text-align: center;" method="POST">
                 {% csrf_token %}
                 <div>
-                    <p><strong>Введите таймаут парсера:</strong>
+                    <p><strong>Введите таймаут парсера в минутах:</strong>
                     {{ form.parse_delay }}<br>
                     <p><strong>Режим работы:</strong>
                     {{ form.mode }}<br>

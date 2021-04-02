@@ -4,7 +4,7 @@ from .models import TaskConfig, SlackBots
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 import subprocess
-from .tasks import parse
+from .tasks import parse, parse2
 from django.http import HttpResponseRedirect
 from celery.contrib.abortable import AbortableAsyncResult
 from slackbot.celery import app
@@ -19,6 +19,14 @@ class BotConfig(CreateView, ListView,):
 
     model = SlackBots
     context_object_name = 'bot_list'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     task = parse.delay
+    #     config = TaskConfig.objects.filter(name='task1').order_by('-id')[0].task_id
+    #     print(f"id={task.id}, state={task.state}, status={task.status}")
+    #     return context
+
 
 
 class ParseConfig(CreateView):
@@ -43,29 +51,43 @@ class BotEdit(UpdateView):
 def start_bot(request):
     """старт задачи №1"""
     # Определить режим работы и передать в задачу
-    mode = TaskConfig.objects.filter(name='task1').order_by('-id')[0].mode
+    mode = TaskConfig.objects.filter(task='task1').order_by('-id')[0].mode
     # Запустить задачу #1
     task = parse.delay(mode)
     # Сохранить ид задачи в базу
-    config = TaskConfig.objects.filter(name='task1').order_by('-id')[0]
+    config = TaskConfig.objects.filter(task='task1').order_by('-id')[0]
     config.task_id = task.id
     config.save()
-    messages.error(request, 'Задача успешно запущена!')
+    messages.info(request, 'Задача успешно запущена!')
     return redirect('botconfig')
 
 
 def stop_bot(request):
     """стоп задачи №1"""
-    task_id = TaskConfig.objects.filter(name='task1').order_by('-id')[0].task_id
+    task_id = TaskConfig.objects.filter(task='task1').order_by('-id')[0].task_id
     app.control.revoke(task_id, terminate=True)
-    messages.error(request, 'Задача остановлена!')
+    messages.info(request, 'Задача остановлена!')
     return redirect('botconfig')
 
 
 def stop_all_bots(request):
     """стоп всех задач"""
-    task_ids = TaskConfig.objects.filter(name='task1')
+    task_ids = TaskConfig.objects.filter(task='task1')
     for task_id in task_ids:
         app.control.revoke(task_id.task_id, terminate=True)
-    messages.error(request, 'Задача остановлена!')
+    messages.info(request, 'Задачи остановлены!')
+    return redirect('botconfig')
+
+
+def start_bot2(request):
+    """старт задачи №1"""
+    # Определить режим работы и передать в задачу
+    mode = TaskConfig.objects.filter(task='task2').order_by('-id')[0].mode
+    # Запустить задачу #1
+    task = parse2.delay(mode)
+    # Сохранить ид задачи в базу
+    config = TaskConfig.objects.filter(task='task2').order_by('-id')[0]
+    config.task_id = task.id
+    config.save()
+    messages.info(request, 'Задача успешно запущена!')
     return redirect('botconfig')
