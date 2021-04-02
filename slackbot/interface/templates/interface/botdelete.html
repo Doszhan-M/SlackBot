@@ -1,0 +1,23 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+
+
+{% block content1 %}
+<header class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+
+        <!-- Masthead Heading-->
+        <h2 style="text-align: center;">Вы действительно хотите удалить выбранный бот?</h2> <br>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+    </div>
+    <form style="text-align: center;" href="{{ bot.id }}" method="POST">
+        {% csrf_token %}
+        <input class=" btn btn-danger mx-auto" type="submit" value="подтвердить">
+    </form>
+</header>
+{% endblock content1 %}

@@ -8,9 +8,13 @@ class SlackBotForm(ModelForm):
     # в класс мета как обычно надо написать модель по которой будет строится форма и нужные нам поля. 
     class Meta:
         model = SlackBots
-        fields = ['token', 'channel', 'task', 'delay', 'editor_text',]
+        fields = ['name', 'token', 'channel', 'task', 'delay', 'editor_text',]
 
         widgets = {
+            'name': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Название бота'
+            }),
             'token': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Токен слак бота'

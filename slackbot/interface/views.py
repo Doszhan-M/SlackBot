@@ -1,6 +1,6 @@
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, ListView, DeleteView, UpdateView
 from .forms import SlackBotForm, ParseForm
-from .models import TaskConfig
+from .models import TaskConfig, SlackBots
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 import subprocess
@@ -12,16 +12,32 @@ from django.contrib import messages
 from datetime import datetime
 
 
-class BotConfig(CreateView):
+class BotConfig(CreateView, ListView,):
     form_class = SlackBotForm
     template_name = 'interface/botconfig.html'
     success_url = reverse_lazy('botconfig')
+
+    model = SlackBots
+    context_object_name = 'bot_list'
 
 
 class ParseConfig(CreateView):
     form_class = ParseForm
     template_name = 'interface/parseconfig.html'
     success_url = reverse_lazy('start_bot')
+
+
+class BotDelete(DeleteView):
+    template_name = 'interface/botdelete.html'
+    queryset = SlackBots.objects.all()
+    success_url = reverse_lazy('botconfig')
+
+
+class BotEdit(UpdateView):
+    template_name = 'interface/botedit.html'
+    form_class = SlackBotForm
+    queryset = SlackBots.objects.all()
+    success_url = reverse_lazy('botconfig')
 
 
 def start_bot(request):
@@ -34,8 +50,7 @@ def start_bot(request):
     config = TaskConfig.objects.filter(name='task1').order_by('-id')[0]
     config.task_id = task.id
     config.save()
-    
-    
+    messages.error(request, 'Задача успешно запущена!')
     return redirect('botconfig')
 
 

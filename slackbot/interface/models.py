@@ -16,6 +16,8 @@ class Posts(models.Model):
 
 
 class SlackBots(models.Model):
+    name = models.CharField(max_length=255, null=False,
+                             verbose_name='Название бота',)
     token = models.CharField(max_length=255, null=False,
                              verbose_name='Токен',)
     channel = models.CharField(max_length=255, default='#general',

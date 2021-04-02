@@ -1,0 +1,37 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+
+
+{% block content1 %}
+<header class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+
+        <!-- Masthead Heading-->
+        <h1 style="text-align: center;">Редактировать статью</h1><br>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-xl-10 mx-auto">
+                <form style="text-align: center;" method="POST">
+                    {% csrf_token %}
+                    {{ form.name }}<br>
+                    {{ form.token }}<br>
+                    {{ form.channel }}<br>
+                    {{ form.task }}<br>
+                    {{ form.delay }}<br>
+                    {{ form.editor_text }}<br>
+                    <input class="btn btn-warning float-center" type="submit" value="СОХРАНИТЬ ИЗМЕНЕНИЯ">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+</header>
+{% endblock content1 %}
