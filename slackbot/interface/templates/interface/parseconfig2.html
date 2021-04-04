@@ -8,7 +8,7 @@
     <div class="container d-flex align-items-center flex-column">
 
         <!-- Masthead Heading-->
-        <h1 class="masthead-heading text-uppercase mb-0">Конфигурация Задачи №1</h1>
+        <h1 class="masthead-heading text-uppercase mb-0">Конфигурация Задачи №2</h1>
         <!-- Icon Divider-->
         <div class="divider-custom divider-light">
             <div class="divider-custom-line"></div>
@@ -33,13 +33,11 @@
                     {{ form.hour }}<br>
                     <p><strong>В какой день недели отправить сообщение:</strong>
                     {{ form.day }}<br>
-                </div>
                 <input class="btn btn-primary float-center" type="submit" value="ЗАПУСТИТЬ">
-                <a class="btn btn-danger mx-auto" href="/stop_bot?bot_type=1">ОСТАНОВИТЬ</a><br><br>
+                <a class="btn btn-danger mx-auto" href="/stop_bot?bot_type=2">ОСТАНОВИТЬ</a><br><br>
                 <a class="btn btn-warning" href="{% url 'stop_all_bots' %}">ОСТАНОВИТЬ ВСЕ АКТИВНЫЕ ЗАДАЧИ</a>
             </form>
             </div>
         </div>
 </section>
-
 {% endblock content1 %}

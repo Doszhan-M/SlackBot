@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from .models import SlackBots, TaskConfig
-from django.forms import Select, TextInput, Textarea, URLInput, NumberInput
+from django.forms import Select, TextInput, Textarea, URLInput, NumberInput, HiddenInput
 
 
 # Создаём модельную форму
@@ -8,7 +8,7 @@ class SlackBotForm(ModelForm):
     # в класс мета как обычно надо написать модель по которой будет строится форма и нужные нам поля. 
     class Meta:
         model = SlackBots
-        fields = ['name', 'token', 'channel', 'task', 'delay', 'editor_text',]
+        fields = ['name', 'token', 'channel', 'task', 'delay', 'editor_text', 'bot_tags',]
 
         widgets = {
             'name': TextInput(attrs={
@@ -43,7 +43,10 @@ class SlackBotForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Введите вступительный текст сообщения...'
             }),
-
+            'bot_tags': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Для задачи №2 введите теги через запятую'
+            }),
         }
 
 

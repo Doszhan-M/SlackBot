@@ -5,6 +5,7 @@ from interface.management.commands.random_agent import get_agent
 from slack import WebClient
 import time
 from datetime import datetime
+from slack.errors import SlackApiError
 
 
 # url страницы для парсинга
@@ -41,7 +42,7 @@ def get_html(url, params=None):
     return r
 
 
-def get_content(html):
+def get_content(html, task, status):
     """создаем python объекты из спарсенной страницы"""
     # работа библиотеки BeautifulSoup
     soup = BeautifulSoup(html, 'html.parser')
@@ -52,11 +53,13 @@ def get_content(html):
         public_time = item.find('span', class_ = 'post__time').get_text(strip=True)
         # Получить заголовок поста
         headline=item.find('h2', class_ = 'post__title').get_text(strip=True)
-        if public_time.find('31 марта') == 0 and not Posts.objects.filter(headline=headline):
+        if public_time.find('вчера') == 0 and not Posts.objects.filter(headline=headline, task=task):
             Posts.objects.create(
             headline=headline,
             link=item.find('a', class_ = 'post__title_link').get('href'),
-            tags=item.find('ul', class_ = 'post__hubs inline-list').get_text(strip=True))
+            tags=item.find('ul', class_ = 'post__hubs inline-list').get_text(strip=True),
+            status=status,
+            task=task,)
             print('Появилась новая запись')
         else:
             print('Новых постов нет') 
@@ -65,7 +68,7 @@ def get_content(html):
 def send_message():
     """отправить сообщение на канал"""
     # найти все собранные посты за период №1
-    posts = Posts.objects.filter(status='waiting')
+    posts = Posts.objects.filter(status='waiting1')
     if posts:
         # найти все боты для задачи №1
         bots = SlackBots.objects.filter(task='work1')
@@ -74,17 +77,20 @@ def send_message():
             channel = bot.channel
             editor_text = bot.editor_text
             slackbot = WebClient(token=bot.token)
-            slackbot.chat_postMessage(channel = channel, text = editor_text)
-            time.sleep(delay)
-            # отправить все посты с задержкой
-            for post in posts:
-                link = post.link
-                slackbot.chat_postMessage(channel = channel, text = link)
-                # изменить статус поста на отправлено
-                post.status = 'sended'
-                post.save()
-                print('Сообщение отправлено')
-                time.sleep (delay)
+            try:
+                slackbot.chat_postMessage(channel = channel, text = editor_text)
+                time.sleep(delay)
+                # отправить все посты с задержкой
+                for post in posts:
+                    link = post.link
+                    slackbot.chat_postMessage(channel = channel, text = link)
+                    # изменить статус поста на отправлено
+                    post.status = 'sended'
+                    post.save()
+                    print('Сообщение отправлено')
+                    time.sleep (delay)
+            except SlackApiError:
+                print('Канал не найден или неверный токен')
     else:
         print('Ожидание новых постов')
 
@@ -129,7 +135,7 @@ def work_mode2(mode):
 def send_message2():
     """отправить сообщение на канал"""
     # найти все собранные посты за период задачи №2
-    posts = Posts.objects.filter(status='waiting')
+    posts = Posts.objects.filter(status='waiting2')
     text = set()
     if posts:
         # найти все боты для задачи №2
@@ -148,9 +154,9 @@ def send_message2():
                         # Если есть совпадение, то добавляем ее в переменную
                         link = post.link
                         text.add(link)
-                # изменить статус поста на отправлено
-                post.status = 'sended'
-                post.save()
+                        # изменить статус поста на отправлено
+                        post.status = 'sended'
+                        post.save()
     if text:
         # текс редактора
         slackbot.chat_postMessage(channel = channel, text = editor_text)

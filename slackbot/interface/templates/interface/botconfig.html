@@ -18,10 +18,6 @@
         <!-- Masthead Subheading-->
         <p class="masthead-subheading font-weight-light mb-0">Парсинг блога- Оповешание о новых постах - Уведомление
             студентов</p>
-
-            <hr>
-            <a class="btn btn-danger float-center" href="{% url 'start_bot2' %}">НАСТРОИТЬ И ЗАПУСТИТЬ</a>
-            <hr>
     </div>
 </header>
 <!-- Portfolio Section-->
@@ -159,6 +155,8 @@
                                     {{ form.delay }}
                                     <p style="text-align: left;"><strong>Введите вступительный текст сообщения...:</strong>
                                     {{ form.editor_text }}<hr>
+                                    <p style="text-align: left;"><strong>Для задачи №2 введите теги через запятую:</strong>
+                                    {{ form.bot_tags }}<hr>
                                     <input class="btn btn-primary float-center" type="submit" value="СОХРАНИТЬ">
                                 </form>
                             </div>
@@ -210,19 +208,9 @@
                             <!-- Portfolio Modal - Title-->
                             <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0"
                                 id="portfolioModal3Label">Конфигурировать Задачу №2</h2>
-                            <!-- Icon Divider-->
-                            <div class="divider-custom">
-                                <div class="divider-custom-line"></div>
-                                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                <div class="divider-custom-line"></div>
-                            </div>
-                            <!-- Portfolio Modal - Image-->
-                            <img class="img-fluid rounded mb-5"
-                                src="{% static 'interface/assets/img/portfolio/cake.png' %}" alt="" />
-                            <!-- Portfolio Modal - Text-->
-                            <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque
-                                assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit
-                                asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                            <hr>
+                            <a class="btn btn-danger float-center" href="{% url 'parseconfig2' %}">НАСТРОИТЬ И ЗАПУСТИТЬ</a>
+                            <hr>
 
                         </div>
                     </div>
