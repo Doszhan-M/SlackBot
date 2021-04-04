@@ -4,6 +4,7 @@
 **/.idea/
 **/__pycache__/
 **/.vscode/
+dump.rdb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
