@@ -53,7 +53,7 @@ def get_content(html, task, status):
         public_time = item.find('span', class_ = 'post__time').get_text(strip=True)
         # Получить заголовок поста
         headline=item.find('h2', class_ = 'post__title').get_text(strip=True)
-        if public_time.find('вчера') == 0 and not Posts.objects.filter(headline=headline, task=task):
+        if public_time.find('сегодня') == 0 and not Posts.objects.filter(headline=headline, task=task):
             Posts.objects.create(
             headline=headline,
             link=item.find('a', class_ = 'post__title_link').get('href'),
