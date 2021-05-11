@@ -1,4 +1,4 @@
-# SLACKBOT for SkillFactory
+# SLACKBOT хакатон
 ![picture](https://miro.medium.com/max/4000/1*AB7mUaMbKwZjThYXVIuenQ.jpeg)
 
 Внимательно прочтите инструкцию перед развертыванием приложения!
