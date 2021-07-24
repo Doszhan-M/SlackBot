@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from .models import SlackBots, TaskConfig
-from django.forms import Select, TextInput, Textarea, URLInput, NumberInput, HiddenInput
+from django.forms import Select, TextInput, Textarea, URLInput, NumberInput
 
 
 # Создаём модельную форму

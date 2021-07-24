@@ -3,7 +3,7 @@ from interface.models import Posts, SlackBots
 
 
 class Command(BaseCommand):
-    help = 'Удаление всех новостей'
+    help = 'Удаление всех ботов'
 
     def handle(self, *args, **options):
         Posts.objects.all().delete()

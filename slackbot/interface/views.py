@@ -1,15 +1,11 @@
-from django.views.generic import TemplateView, CreateView, ListView, DeleteView, UpdateView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from .forms import SlackBotForm, ParseForm
 from .models import TaskConfig, SlackBots
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
-import subprocess
 from .tasks import parse, parse2
-from django.http import HttpResponseRedirect
-from celery.contrib.abortable import AbortableAsyncResult
 from slackbot.celery import app
 from django.contrib import messages
-from datetime import datetime
 
 
 class BotConfig(CreateView, ListView,):

@@ -22,7 +22,7 @@ class Command(BaseCommand):
         # хост нужно передать без слэша в конце
         HOST = 'https://habr.com'
         # Create a slack client
-        SLACKBOT = WebClient(token='xoxb-1900575918485-1903110096709-oQuJPQ5j0uJtwg3QV6AwPwjX')
+        SLACKBOT = WebClient(token='')
 
 
         def get_html(url, params=None):
@@ -62,6 +62,7 @@ class Command(BaseCommand):
                 channel = bot.channel
                 editor_text = bot.editor_text
                 slackbot = WebClient(token=bot.token)
+                print(bot.token)
                 slackbot.chat_postMessage(channel = channel, text = editor_text)
                 time.sleep(delay)
                 posts = Posts.objects.filter(status='waiting')
@@ -81,6 +82,7 @@ class Command(BaseCommand):
             if html.status_code == 200: # если есть соединение:
                 # Вызвать пункцию для заполнения данных
                 data = get_content(html.text)
+                data = True
                 # Если есть новые записи:
                 if data:
                     # Отправить сообщение каналу

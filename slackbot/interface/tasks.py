@@ -1,11 +1,7 @@
-from celery import shared_task
-import requests
-from bs4 import BeautifulSoup
-from interface.models import Posts, SlackBots, TaskConfig
-from interface.tasks_extension import get_html, URL, get_content, send_message, work_mode, work_mode2
-from slack import WebClient
 import time
+from celery import shared_task
 from celery.contrib.abortable import AbortableTask
+from interface.tasks_extension import get_html, URL, get_content, work_mode, work_mode2
 from slackbot.celery import app
 
 
@@ -20,6 +16,7 @@ def parse(mode, task, status):
         try:
             if html.status_code == 200:  # если есть соединение:
                 get_content(html.text, task, status)   # Вызвать функцию для заполнения данных
+                work_mode(mode) 
         except AttributeError:
             work_mode(mode)  # Вызвать функцию для отправки сообщения в слак
             time.sleep(1)  # задержка для стабильности
@@ -35,6 +32,7 @@ def parse2(mode, task, status):
         try:
             if html.status_code == 200:  # если есть соединение:
                 get_content(html.text, task, status)   # Вызвать функцию для заполнения данных
+                work_mode2(mode) 
         except AttributeError:
             work_mode2(mode)  # Вызвать функцию для отправки сообщения в слак
             time.sleep(1)  # задержка для стабильности

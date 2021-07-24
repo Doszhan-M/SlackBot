@@ -10,10 +10,10 @@ class PostsAdmin(admin.ModelAdmin):
 
 
 class BotAdmin(admin.ModelAdmin):
-    list_display = ('token',)
-    list_display_links = ('token',)
-    list_filter = ('token',)
-    search_fields = ('token',)
+    list_display = ('name',)
+    list_display_links = ('name',)
+    list_filter = ('name',)
+    search_fields = ('name',)
 
 
 admin.site.register(Posts, PostsAdmin)
